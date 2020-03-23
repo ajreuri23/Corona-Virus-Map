@@ -4,8 +4,7 @@
 
 <script>
 //import L from "leaflet";
-import { mapCreation } from "../../scripts/mapscript.js";
-import {getCountries, getCoordinates} from '../../scripts/api.js';
+import { mapCreation, putDots } from "../../scripts/mapscript.js";
  
 export default {
   data() {
@@ -16,8 +15,7 @@ export default {
   },
   async mounted() {
     mapCreation("coronamap");
-    this.countriesData = await getCountries();
-    this.coordinates = await getCoordinates();
+    putDots();
   }
 };
 </script>

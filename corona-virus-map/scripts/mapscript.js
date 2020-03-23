@@ -1,7 +1,9 @@
 import L from "leaflet";
+import { getCountries } from "./api.js";
+var mymap;
 
 const mapCreation = id => {
-  var mymap = L.map(`${id}`).setView([51.505, -0.09], 4);
+  mymap = L.map(`${id}`).setView([51.505, -0.09], 4);
 
   L.tileLayer(
     "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -19,4 +21,41 @@ const mapCreation = id => {
   ).addTo(mymap);
 };
 
-export {mapCreation};
+const putDots = async () => {
+  let result = await getCountries();
+  result.forEach(country => {
+      let newCountry = "";
+    if(country.province != "") { 
+        newCountry = country.province 
+    } 
+    else { newCountry = country.country; }
+
+    let popup = L.popup()
+      .setLatLng([country.coordinates.latitude, country.coordinates.longitude])
+      .setContent(
+        `<h1>${newCountry}</h1><p>Cases: ${country.latest.confirmed}</p><p>Deaths: ${country.latest.deaths}</p>`
+      );
+
+    L.circleMarker(
+      [country.coordinates.latitude, country.coordinates.longitude],
+      {
+        radius: 5,
+        fillColor: "#FF0000", // "#28ea3f",//"#0163FF",
+        color: "#A9F6B2", //"#0163FF",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 1
+      }
+    )
+      .bindPopup(popup)
+      .on("mouseover", function() {
+        this.openPopup();
+      })
+      .on("mouseout", function() {
+        this.closePopup();
+      })
+      .addTo(mymap);
+  });
+};
+
+export { mapCreation, putDots };
