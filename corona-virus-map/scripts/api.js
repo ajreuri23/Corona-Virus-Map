@@ -8,9 +8,4 @@ const getCountries = () => {
   );
 };
 
-const getCoordinates = async() => {
-    let result = await getCountries()
-    return result.map(data => data.coordinates);
-} 
-
-export { getCountries, getCoordinates };
+export { getCountries };

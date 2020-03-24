@@ -22,7 +22,7 @@ export default {
 
 <style>
 #coronamap {
-  position: absolute;
+  position:absolute;
   width: 100%;
   height: 90%;
   left: 0%;

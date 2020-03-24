@@ -11,7 +11,7 @@ const mapCreation = id => {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 8,
-      minZoom: 3,
+      minZoom: 2,
       id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
@@ -24,22 +24,16 @@ const mapCreation = id => {
 const putDots = async () => {
   let result = await getCountries();
   result.forEach(country => {
-      let newCountry = "";
-    if(country.province != "") { 
-        newCountry = country.province 
-    } 
-    else { newCountry = country.country; }
-
     let popup = L.popup()
       .setLatLng([country.coordinates.latitude, country.coordinates.longitude])
       .setContent(
-        `<h1>${newCountry}</h1><p>Cases: ${country.latest.confirmed}</p><p>Deaths: ${country.latest.deaths}</p>`
+        `<h1>${country.country}</h1><p>Cases: ${country.latest.confirmed}</p><p>Deaths: ${country.latest.deaths}</p>`
       );
 
     L.circleMarker(
       [country.coordinates.latitude, country.coordinates.longitude],
       {
-        radius: 5,
+        radius: country.latest.confirmed / 2000 + 5,
         fillColor: "#FF0000", // "#28ea3f",//"#0163FF",
         color: "#A9F6B2", //"#0163FF",
         weight: 2,
@@ -55,6 +49,10 @@ const putDots = async () => {
         this.closePopup();
       })
       .addTo(mymap);
+    mymap.setMaxBounds([
+      [-100, -190],
+      [100, 190]
+    ]);
   });
 };
 
